@@ -15,24 +15,40 @@ export const db = {
       completed: false 
     };
     todos.push(newTodo);
+    console.log('Added todo:', newTodo);
     return newTodo;
   },
   
   updateTodo: (id, updates) => {
-    const index = todos.findIndex(todo => todo.id === Number(id));
-    if (index === -1) return null;
+    const numericId = Number(id);
+    const index = todos.findIndex(todo => todo.id === numericId);
+    if (index === -1) {
+      console.log('Todo not found for update:', id);
+      return null;
+    }
     todos[index] = { ...todos[index], ...updates };
+    console.log('Updated todo:', todos[index]);
     return todos[index];
   },
   
   deleteTodo: (id) => {
-    const index = todos.findIndex(todo => todo.id === Number(id));
-    if (index === -1) return false;
-    todos.splice(index, 1);
+    const numericId = Number(id);
+    const index = todos.findIndex(todo => todo.id === numericId);
+    if (index === -1) {
+      console.log('Todo not found for deletion:', id);
+      return false;
+    }
+    const deletedTodo = todos.splice(index, 1)[0];
+    console.log('Deleted todo:', deletedTodo);
     return true;
   },
   
   getTodoById: (id) => {
-    return todos.find(todo => todo.id === Number(id));
+    const numericId = Number(id);
+    const todo = todos.find(todo => todo.id === numericId);
+    if (!todo) {
+      console.log('Todo not found:', id);
+    }
+    return todo;
   }
 };
