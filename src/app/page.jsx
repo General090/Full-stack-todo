@@ -3,14 +3,20 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
 
 export default function Home() {
   const [todoText, setTodoText] = useState('');
+  const [isAdding, setIsAdding] = useState(false);
   const router = useRouter();
 
   const handleAddTodo = async () => {
-    if (!todoText.trim()) return;
+    if (!todoText.trim()) {
+      toast.error('Please enter a todo');
+      return;
+    }
 
+    setIsAdding(true);
     try {
       const response = await fetch('/api/todos', {
         method: 'POST',
@@ -22,10 +28,20 @@ export default function Home() {
 
       if (response.ok) {
         setTodoText('');
-        window.location.reload();
+        toast.success('Todo added successfully!');
+        // Refresh the page to show the new todo
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        const error = await response.json();
+        toast.error(error.error || 'Failed to add todo');
       }
     } catch (error) {
       console.error('Error adding todo:', error);
+      toast.error('Failed to add todo');
+    } finally {
+      setIsAdding(false);
     }
   };
 
@@ -41,13 +57,15 @@ export default function Home() {
             onChange={(e) => setTodoText(e.target.value)}
             placeholder="Enter a new todo"
             className="flex-1 px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onKeyPress={(e) => e.key === 'Enter' && handleAddTodo()}
+            onKeyPress={(e) => e.key === 'Enter' && !isAdding && handleAddTodo()}
+            disabled={isAdding}
           />
           <button
             onClick={handleAddTodo}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-r-md transition duration-200"
+            disabled={isAdding}
+            className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white px-4 py-2 rounded-r-md transition duration-200 disabled:cursor-not-allowed"
           >
-            Add
+            {isAdding ? 'Adding...' : 'Add'}
           </button>
         </div>
 

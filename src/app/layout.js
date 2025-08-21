@@ -1,6 +1,7 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
-import Link from 'next/link'; // Add this import
+import Link from 'next/link';
+import ToastProvider from './components/ToastProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,6 +22,7 @@ export default function RootLayout({ children }) {
           </div>
         </nav>
         <main className="container mx-auto px-4 py-8">{children}</main>
+        <ToastProvider />
       </body>
     </html>
   );

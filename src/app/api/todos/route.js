@@ -3,8 +3,10 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const todos = await db.getTodos();
-    return NextResponse.json(todos);
+    const todos = db.getTodos();
+    const response = NextResponse.json(todos);
+    response.headers.set('Cache-Control', 'no-store, max-age=0');
+    return response;
   } catch (error) {
     return NextResponse.json(
       { error: 'Internal Server Error' },
