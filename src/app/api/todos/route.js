@@ -2,8 +2,15 @@ import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const todos = db.getTodos();
-  return NextResponse.json(todos);
+  try {
+    const todos = await db.getTodos();
+    return NextResponse.json(todos);
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request) {
@@ -15,7 +22,7 @@ export async function POST(request) {
         { status: 400 }
       );
     }
-    const newTodo = db.addTodo(title);
+    const newTodo = await db.addTodo(title);
     return NextResponse.json(newTodo, { status: 201 });
   } catch (error) {
     return NextResponse.json(
@@ -28,7 +35,7 @@ export async function POST(request) {
 export async function PUT(request) {
   try {
     const { id, ...updates } = await request.json();
-    const updatedTodo = db.updateTodo(id, updates);
+    const updatedTodo = await db.updateTodo(id, updates);
     if (!updatedTodo) {
       return NextResponse.json(
         { error: 'Todo not found' }, 
@@ -47,7 +54,7 @@ export async function PUT(request) {
 export async function DELETE(request) {
   try {
     const { id } = await request.json();
-    const success = db.deleteTodo(id);
+    const success = await db.deleteTodo(id);
     if (!success) {
       return NextResponse.json(
         { error: 'Todo not found' }, 

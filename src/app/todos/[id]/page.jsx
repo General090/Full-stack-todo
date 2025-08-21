@@ -11,19 +11,8 @@ import { notFound } from 'next/navigation';
 // }
 
 
-async function getTodo(id) {
-  try {
-    const todo = db.getTodoById(Number(id));
-    return todo;
-  } catch (error) {
-    console.error('Error fetching todo:', error);
-    return null;
-  }
-}
-
-
 export default async function TodoDetailPage({ params }) {
-  const todo = await getTodo(params.id);
+  const todo = await db.getTodoById(params.id);
 
   if (!todo) {
     notFound();

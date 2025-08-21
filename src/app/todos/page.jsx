@@ -1,5 +1,6 @@
 import TodoItem from '../components/TodoItem';
 import Link from 'next/link';
+import { db } from '@/lib/db';
 
 // async function getTodos() {
 //   const res = await fetch('http://localhost:3000/api/todos', { cache: 'no-store' });
@@ -10,18 +11,8 @@ import Link from 'next/link';
 // }
 
 
-async function getTodos() {
-  try {
-    const todos = db.getTodos();
-    return todos;
-  } catch (error) {
-    console.error('Error fetching todos:', error);
-    return [];
-  }
-}
-
 export default async function TodosPage() {
-  const todos = await getTodos();
+  const todos = await db.getTodos();
 
   return (
     <div className="container mx-auto px-4 py-8">
