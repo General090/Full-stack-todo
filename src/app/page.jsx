@@ -11,17 +11,21 @@ export default function Home() {
   const handleAddTodo = async () => {
     if (!todoText.trim()) return;
 
-    const response = await fetch('/api/todos', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ title: todoText }),
-    });
+    try {
+      const response = await fetch('/api/todos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: todoText }),
+      });
 
-    if (response.ok) {
-      setTodoText('');
-      router.refresh();
+      if (response.ok) {
+        setTodoText('');
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error adding todo:', error);
     }
   };
 

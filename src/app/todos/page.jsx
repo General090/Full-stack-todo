@@ -1,12 +1,23 @@
 import TodoItem from '../components/TodoItem';
 import Link from 'next/link';
 
+// async function getTodos() {
+//   const res = await fetch('http://localhost:3000/api/todos', { cache: 'no-store' });
+//   if (!res.ok) {
+//     throw new Error('Failed to fetch todos');
+//   }
+//   return res.json();
+// }
+
+
 async function getTodos() {
-  const res = await fetch('http://localhost:3000/api/todos', { cache: 'no-store' });
-  if (!res.ok) {
-    throw new Error('Failed to fetch todos');
+  try {
+    const todos = db.getTodos();
+    return todos;
+  } catch (error) {
+    console.error('Error fetching todos:', error);
+    return [];
   }
-  return res.json();
 }
 
 export default async function TodosPage() {

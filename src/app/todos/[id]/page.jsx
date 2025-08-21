@@ -2,13 +2,25 @@ import TodoForm from '@/components/TodoForm';
 import { db } from '@/lib/db';
 import { notFound } from 'next/navigation';
 
+// async function getTodo(id) {
+//   const todo = db.getTodoById(Number(id));
+//   if (!todo) {
+//     return null;
+//   }
+//   return todo;
+// }
+
+
 async function getTodo(id) {
-  const todo = db.getTodoById(Number(id));
-  if (!todo) {
+  try {
+    const todo = db.getTodoById(Number(id));
+    return todo;
+  } catch (error) {
+    console.error('Error fetching todo:', error);
     return null;
   }
-  return todo;
 }
+
 
 export default async function TodoDetailPage({ params }) {
   const todo = await getTodo(params.id);
